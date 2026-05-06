@@ -1,0 +1,9 @@
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp1s0:                  
+      dhcp4: true
+    enp2s0:                  
+      addresses:
+        - 192.168.1.1/24
