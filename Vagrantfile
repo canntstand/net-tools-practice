@@ -2,18 +2,131 @@ Vagrant.configure("2") do |config|
   config.vm.box = "cloud-image/ubuntu-24.04"
   config.vm.box_version = "20260814.0.0"
 
-  (1..6).each do |i|
-    config.vm.define "node-#{i}" do |subconfig|
-      subconfig.vm.hostname = "node-#{i}"
-      subconfig.vm.network "private_network", ip: "192.168.56.#{10 + i - 1}"
+  config.vm.define "upstream-router" do |vm|
+    vm.vm.hostname = "upstream"
 
-      subconfig.vm.provider "virtualbox" do |vb|
-        vb.name = "node-#{i}"
-        vb.cpus = 1
-        vb.memory = 512
-        vb.customize ["modifyvm", :id, "--ioapic", "on"]
-        vb.customize ["modifyvm", :id, "--graphicscontroller", "vboxvga"]
-      end
+    vm.vm.network "private_network",
+      virtualbox__intnet: "lab-wan",
+      auto_config: false
+
+    vm.vm.network "private_network",
+      virtualbox__intnet: "lab-internet",
+      auto_config: false
+
+    vm.vm.provider "virtualbox" do |vb|
+      vb.name = "upstream"
+      vb.cpus = 2
+      vb.memory = 1024
+      vb.gui = false
+      vb.customize ["modifyvm", :id, "--graphicscontroller", "vboxvga"]
+    end
+  end
+
+  config.vm.define "linux-gateway" do |vm|
+    vm.vm.hostname = "gateway"
+
+    vm.vm.network "private_network",
+      virtualbox__intnet: "lab-wan",
+      auto_config: false
+
+    vm.vm.network "private_network",
+      virtualbox__intnet: "lab-lan",
+      auto_config: false
+
+    vm.vm.network "private_network",
+      virtualbox__intnet: "lab-dmz",
+      auto_config: false
+
+    vm.vm.network "private_network",
+      virtualbox__intnet: "lab-mgmt",
+      auto_config: false
+
+    vm.vm.provider "virtualbox" do |vb|
+      vb.name = "gateway"
+      vb.cpus = 2
+      vb.memory = 1024
+      vb.gui = false
+      vb.customize ["modifyvm", :id, "--graphicscontroller", "vboxvga"]
+    end
+  end
+
+  config.vm.define "lan-workstation" do |vm|
+    vm.vm.hostname = "workstation"
+
+    vm.vm.network "private_network",
+      virtualbox__intnet: "lab-lan",
+      auto_config: false
+
+    vm.vm.provider "virtualbox" do |vb|
+      vb.name = "workstation"
+      vb.cpus = 2
+      vb.memory = 1024
+      vb.gui = false
+      vb.customize ["modifyvm", :id, "--graphicscontroller", "vboxvga"]
+    end
+  end
+
+  config.vm.define "lan-dns-server" do |vm|
+    vm.vm.hostname = "dns"
+
+    vm.vm.network "private_network",
+      virtualbox__intnet: "lab-lan",
+      auto_config: false
+
+    vm.vm.provider "virtualbox" do |vb|
+      vb.name = "dns"
+      vb.cpus = 2
+      vb.memory = 1024
+      vb.gui = false
+      vb.customize ["modifyvm", :id, "--graphicscontroller", "vboxvga"]
+    end
+  end
+
+  config.vm.define "dmz-web-server" do |vm|
+    vm.vm.hostname = "web"
+
+    vm.vm.network "private_network",
+      virtualbox__intnet: "lab-dmz",
+      auto_config: false
+
+    vm.vm.provider "virtualbox" do |vb|
+      vb.name = "web"
+      vb.cpus = 2
+      vb.memory = 1024
+      vb.gui = false
+      vb.customize ["modifyvm", :id, "--graphicscontroller", "vboxvga"]
+    end
+  end
+
+  config.vm.define "mgmt-workstation" do |vm|
+    vm.vm.hostname = "admin"
+
+    vm.vm.network "private_network",
+      virtualbox__intnet: "lab-mgmt",
+      auto_config: false
+
+    vm.vm.provider "virtualbox" do |vb|
+      vb.name = "admin"
+      vb.cpus = 2
+      vb.memory = 1024
+      vb.gui = false
+      vb.customize ["modifyvm", :id, "--graphicscontroller", "vboxvga"]
+    end
+  end
+
+  config.vm.define "external-client" do |vm|
+    vm.vm.hostname = "external-client"
+
+    vm.vm.network "private_network",
+      virtualbox__intnet: "lab-internet",
+      auto_config: false
+
+    vm.vm.provider "virtualbox" do |vb|
+      vb.name = "external-client"
+      vb.cpus = 2
+      vb.memory = 1024
+      vb.gui = false
+      vb.customize ["modifyvm", :id, "--graphicscontroller", "vboxvga"]
     end
   end
 end

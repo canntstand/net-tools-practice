@@ -1,0 +1,23 @@
+vagrant status
+    Current machine states:
+
+    upstream-router           running (virtualbox)
+    linux-gateway             running (virtualbox)
+    lan-workstation           running (virtualbox)
+    lan-dns-server            running (virtualbox)
+    dmz-web-server            running (virtualbox)
+    mgmt-workstation          running (virtualbox)
+    external-client           running (virtualbox)
+
+vagrant ssh upstream-router
+
+    $ ip -br a   
+        lo               UNKNOWN        127.0.0.1/8 ::1/128 
+        enp0s8           DOWN           
+        enp0s9           DOWN           
+        enp0s3           UP             10.0.2.15/24 metric 100 fd17:625c:f037:2:a00:27ff:fe2b:393a/64 fe80::a00:27ff:fe2b:393a/64 
+    $ ip -br link
+        lo               UNKNOWN        00:00:00:00:00:00 <LOOPBACK,UP,LOWER_UP> 
+        enp0s8           DOWN           08:00:27:e7:4d:fd <BROADCAST,MULTICAST> 
+        enp0s9           DOWN           08:00:27:8e:66:79 <BROADCAST,MULTICAST> 
+        enp0s3           UP             08:00:27:2b:39:3a <BROADCAST,MULTICAST,UP,LOWER_UP>
