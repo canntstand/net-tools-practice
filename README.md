@@ -46,3 +46,4 @@
 ![Схема 1](images/1.png)
 ![Схема 2](images/2.png)
 ![Схема 3](images/3.png)
+![Схема 4](images/4.png)
